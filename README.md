@@ -5,8 +5,8 @@ logs and firewall flow logs into MITRE ATT&CK-mapped incidents, and renders
 them as a self-contained HTML dashboard. No database, no external services,
 no build step — clone it, point it at logs, open the HTML file it produces.
 
-**[View a sample dashboard →](docs/sample_dashboard.html)** (rendered from
-the bundled synthetic dataset in `data/sample_logs/`)
+**[View the live sample dashboard →](https://spairkie.github.io/log-correlator-siem/)**
+(rendered from the bundled synthetic dataset in `data/sample_logs/`)
 
 ## Why
 
