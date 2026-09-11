@@ -5,7 +5,7 @@ logs and firewall flow logs into MITRE ATT&CK-mapped incidents, and renders
 them as a self-contained HTML dashboard. No database, no external services,
 no build step — clone it, point it at logs, open the HTML file it produces.
 
-**[View the live sample dashboard →](https://spairkie.github.io/log-correlator-siem/)**
+**[View the live sample dashboard →](https://builtbysai.github.io/log-correlator-siem/)**
 (rendered from the bundled synthetic dataset in `data/sample_logs/`)
 
 ## Why
@@ -34,7 +34,7 @@ its own unit tests — see [Design notes](#design-notes) for why.
 ## Quick start
 
 ```bash
-git clone https://github.com/Spairkie/log-correlator-siem.git
+git clone https://github.com/builtbysai/log-correlator-siem.git
 cd log-correlator-siem
 python3 main.py --auth data/sample_logs/auth.log --firewall data/sample_logs/firewall.csv --out output/dashboard.html
 open output/dashboard.html   # or just double-click it
@@ -102,7 +102,7 @@ run against the bundled sample data.
 
 ## About
 
-Built by [Hans Sai](https://spairkie.github.io) — IT Support Associate II at
+Built by [Hans Sai](https://builtbysai.com) — IT Support Associate II at
 Amazon, U.S. Air Force Reservist (Cyber Systems), Cybersecurity B.S. candidate
 at Liberty University (May 2026), Security+ certified with an active DoD
 Secret clearance.

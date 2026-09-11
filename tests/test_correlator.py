@@ -49,7 +49,7 @@ def test_dashboard_renders_valid_self_contained_html():
     assert doc.startswith("<!doctype html>")
     assert "</html>" in doc
     assert "<script src=" not in doc  # no external script tags
-    assert 'href="http' not in doc.replace('href="https://github.com/Spairkie', "")
+    assert 'href="http' not in doc.replace('href="https://github.com/builtbysai', "")
     for inc in incidents:
         assert inc.mitre_id in doc
 

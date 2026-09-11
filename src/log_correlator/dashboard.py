@@ -158,7 +158,7 @@ def render_dashboard(events: List[Event], incidents: List[Incident], summary: Di
   <h2>Incidents</h2>
   {cards}
 </main>
-<footer>Built by Hans Sai &middot; <a href="https://github.com/Spairkie/log-correlator-siem" style="color:var(--accent)">github.com/Spairkie/log-correlator-siem</a></footer>
+<footer>Built by Hans Sai &middot; <a href="https://github.com/builtbysai/log-correlator-siem" style="color:var(--accent)">github.com/builtbysai/log-correlator-siem</a></footer>
 </body>
 </html>
 """
