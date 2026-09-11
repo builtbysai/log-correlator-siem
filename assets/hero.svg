@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a120c"/>
+      <stop offset="1" stop-color="#070b08"/>
+    </linearGradient>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1.2" y="0" fill="#33ff66" opacity="0.035"/>
+    </pattern>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect x="8" y="8" width="1184" height="584" rx="18" fill="url(#bg)" stroke="#1d3a26" stroke-width="2"/>
+  <rect x="8" y="8" width="1184" height="584" rx="18" fill="url(#scan)"/>
+
+  <!-- faint circuit traces -->
+  <g stroke="#1d3a26" stroke-width="1.5" opacity="0.7" fill="none">
+    <path d="M 60 540 h 120 l 30 -30 h 200"/>
+    <path d="M 1080 560 h -140 l -30 -34 h -180"/>
+    <circle cx="60" cy="540" r="4" fill="#1d3a26" stroke="none"/>
+    <circle cx="1080" cy="560" r="4" fill="#1d3a26" stroke="none"/>
+    <circle cx="380" cy="510" r="3" fill="#33ff66" stroke="none" opacity="0.5"/>
+    <circle cx="730" cy="526" r="3" fill="#33ff66" stroke="none" opacity="0.5"/>
+  </g>
+
+  <!-- title -->
+  <text x="48" y="76" font-size="38" fill="#eaf7ee" font-weight="bold"><tspan fill="#33ff66">$ </tspan>log-correlator-siem</text>
+  <text x="48" y="108" font-size="17" fill="#8fa89a">a dependency-free log correlation engine &#8594; MITRE ATT&amp;CK-mapped incidents &#8594; self-contained HTML dashboard</text>
+
+  <!-- connector dots -->
+  <g fill="#33ff66" opacity="0.9">
+    <circle cx="120" cy="200" r="5"/>
+    <circle cx="1080" cy="200" r="5"/>
+  </g>
+
+  <!-- INPUT nodes -->
+  <g>
+    <rect x="48" y="150" width="300" height="112" rx="12" fill="#0c1410" stroke="#2a5236" stroke-width="1.5"/>
+    <rect x="48" y="150" width="300" height="112" rx="12" fill="none" stroke="#33ff66" stroke-width="0.75" opacity="0.25"/>
+    <text x="72" y="190" font-size="15" fill="#5c7a66">INPUT &#183; AUTH LOG</text>
+    <text x="72" y="222" font-size="21" fill="#eaf7ee" font-weight="bold">auth.log</text>
+    <text x="72" y="248" font-size="14" fill="#8fa89a">sshd / sudo events &#183; 34 ingested</text>
+  </g>
+  <g>
+    <rect x="48" y="276" width="300" height="112" rx="12" fill="#0c1410" stroke="#2a5236" stroke-width="1.5"/>
+    <rect x="48" y="276" width="300" height="112" rx="12" fill="none" stroke="#33ff66" stroke-width="0.75" opacity="0.25"/>
+    <text x="72" y="316" font-size="15" fill="#5c7a66">INPUT &#183; FIREWALL FLOWS</text>
+    <text x="72" y="348" font-size="21" fill="#eaf7ee" font-weight="bold">firewall.csv</text>
+    <text x="72" y="374" font-size="14" fill="#8fa89a">timestamp, src, dst, port, bytes</text>
+  </g>
+
+  <!-- arrows input -> engine -->
+  <g stroke="#33ff66" stroke-width="2" opacity="0.8" fill="none">
+    <path d="M 348 206 C 400 206, 400 240, 452 240"/>
+    <path d="M 348 332 C 400 332, 400 300, 452 300"/>
+  </g>
+  <g fill="#33ff66" opacity="0.8">
+    <polygon points="452,233 466,240 452,247"/>
+    <polygon points="452,293 466,300 452,307"/>
+  </g>
+
+  <!-- ENGINE -->
+  <g>
+    <rect x="466" y="150" width="290" height="238" rx="12" fill="#0b1710" stroke="#33ff66" stroke-width="1.75" filter="url(#glow)"/>
+    <text x="494" y="190" font-size="15" fill="#33ff66">CORRELATION ENGINE</text>
+    <text x="494" y="222" font-size="19" fill="#eaf7ee" font-weight="bold">correlate sequences,</text>
+    <text x="494" y="246" font-size="19" fill="#eaf7ee" font-weight="bold">not single lines</text>
+    <g font-size="14" fill="#0a0f0b">
+      <rect x="494" y="264" width="52" height="26" rx="6" fill="#33ff66" opacity="0.92"/><text x="501" y="282" fill="#0a0f0b" font-weight="bold">R001</text>
+      <rect x="552" y="264" width="52" height="26" rx="6" fill="#33ff66" opacity="0.92"/><text x="559" y="282" fill="#0a0f0b" font-weight="bold">R002</text>
+      <rect x="610" y="264" width="52" height="26" rx="6" fill="#33ff66" opacity="0.92"/><text x="617" y="282" fill="#0a0f0b" font-weight="bold">R003</text>
+      <rect x="494" y="298" width="52" height="26" rx="6" fill="#33ff66" opacity="0.92"/><text x="501" y="316" fill="#0a0f0b" font-weight="bold">R004</text>
+      <rect x="552" y="298" width="52" height="26" rx="6" fill="#33ff66" opacity="0.92"/><text x="559" y="316" fill="#0a0f0b" font-weight="bold">R005</text>
+    </g>
+    <text x="494" y="352" font-size="14" fill="#8fa89a">pure functions &#183; zero deps</text>
+    <text x="494" y="374" font-size="14" fill="#8fa89a">rules chain: R002 reads R001</text>
+  </g>
+
+  <!-- arrow engine -> attack -->
+  <g stroke="#33ff66" stroke-width="2" opacity="0.8" fill="none">
+    <path d="M 756 270 h 56"/>
+  </g>
+  <g fill="#33ff66" opacity="0.8"><polygon points="812,263 826,270 812,277"/></g>
+
+  <!-- ATT&CK badges -->
+  <g>
+    <rect x="826" y="150" width="180" height="238" rx="12" fill="#0c1410" stroke="#2a5236" stroke-width="1.5"/>
+    <text x="850" y="190" font-size="15" fill="#5c7a66">MITRE ATT&amp;CK</text>
+    <g font-size="14">
+      <rect x="850" y="204" width="132" height="28" rx="6" fill="#14231a" stroke="#ff4d6d" stroke-width="1"/><circle cx="864" cy="218" r="5" fill="#ff4d6d"/><text x="876" y="223" fill="#eaf7ee">T1110.001</text>
+      <rect x="850" y="238" width="132" height="28" rx="6" fill="#14231a" stroke="#ff4d6d" stroke-width="1"/><circle cx="864" cy="252" r="5" fill="#ff4d6d"/><text x="876" y="257" fill="#eaf7ee">T1078</text>
+      <rect x="850" y="272" width="132" height="28" rx="6" fill="#14231a" stroke="#ffb020" stroke-width="1"/><circle cx="864" cy="286" r="5" fill="#ffb020"/><text x="876" y="291" fill="#eaf7ee">T1548.003</text>
+      <rect x="850" y="306" width="132" height="28" rx="6" fill="#14231a" stroke="#ffd23f" stroke-width="1"/><circle cx="864" cy="320" r="5" fill="#ffd23f"/><text x="876" y="325" fill="#eaf7ee">T1046</text>
+      <rect x="850" y="340" width="132" height="28" rx="6" fill="#14231a" stroke="#ffd23f" stroke-width="1"/><circle cx="864" cy="354" r="5" fill="#ffd23f"/><text x="876" y="359" fill="#eaf7ee">T1041</text>
+    </g>
+  </g>
+
+  <!-- arrow attack -> dashboard -->
+  <g stroke="#33ff66" stroke-width="2" opacity="0.8" fill="none">
+    <path d="M 1006 270 h 44"/>
+  </g>
+  <g fill="#33ff66" opacity="0.8"><polygon points="1050,263 1064,270 1050,277"/></g>
+
+  <!-- OUTPUT -->
+  <g>
+    <rect x="1064" y="150" width="88" height="238" rx="12" fill="#0c1410" stroke="#2a5236" stroke-width="1.5"/>
+    <text x="1080" y="190" font-size="13" fill="#5c7a66">OUTPUT</text>
+    <!-- mini bar chart -->
+    <g>
+      <rect x="1082" y="300" width="10" height="60" fill="#ff4d6d" rx="2"/>
+      <rect x="1096" y="330" width="10" height="30" fill="#ffb020" rx="2"/>
+      <rect x="1110" y="320" width="10" height="40" fill="#ffd23f" rx="2"/>
+      <rect x="1124" y="344" width="10" height="16" fill="#33ff66" rx="2"/>
+    </g>
+    <text x="1080" y="230" font-size="15" fill="#eaf7ee" font-weight="bold">5</text>
+    <text x="1080" y="248" font-size="13" fill="#8fa89a">incidents</text>
+    <text x="1080" y="392" font-size="13" fill="#8fa89a" transform="rotate(0)">.html</text>
+  </g>
+
+  <!-- bottom severity strip -->
+  <g font-size="16">
+    <rect x="48" y="430" width="1104" height="76" rx="12" fill="#0a100c" stroke="#1d3a26" stroke-width="1.5"/>
+    <text x="76" y="462" fill="#5c7a66">SAMPLE RUN &#8594;</text>
+    <circle cx="300" cy="456" r="7" fill="#ff4d6d"/><text x="316" y="462" fill="#eaf7ee" font-weight="bold">2 critical</text>
+    <circle cx="470" cy="456" r="7" fill="#ffb020"/><text x="486" y="462" fill="#eaf7ee" font-weight="bold">1 high</text>
+    <circle cx="620" cy="456" r="7" fill="#ffd23f"/><text x="636" y="462" fill="#eaf7ee" font-weight="bold">2 medium</text>
+    <circle cx="790" cy="456" r="7" fill="#33ff66"/><text x="806" y="462" fill="#eaf7ee" font-weight="bold">0 low</text>
+    <text x="940" y="462" fill="#5c7a66">&#183; 34 events ingested</text>
+  </g>
+
+  <text x="48" y="552" font-size="15" fill="#5c7a66">Built by Hans Sai &#183; no database, no services, no build step &#8212; clone it, point it at logs, open the HTML it produces</text>
+</svg>

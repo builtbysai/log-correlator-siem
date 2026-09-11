@@ -8,6 +8,14 @@ no build step — clone it, point it at logs, open the HTML file it produces.
 **[View the live sample dashboard →](https://builtbysai.github.io/log-correlator-siem/)**
 (rendered from the bundled synthetic dataset in `data/sample_logs/`)
 
+<p align="center">
+  <img src="assets/hero.svg" width="800" alt="How log-correlator-siem works: auth.log and firewall.csv feed a correlation engine with five detection rules, mapped to MITRE ATT&CK techniques, rendered as an HTML dashboard">
+</p>
+
+<p align="center">
+  <img src="assets/dashboard-browser.svg" width="800" alt="Screenshot of the real incident dashboard: event and incident counts, MITRE ATT&CK techniques observed, and the five correlated incidents">
+</p>
+
 ## Why
 
 Most public "SIEM" demos are either a 40-container ELK/Wazuh stack, or a
@@ -43,6 +51,10 @@ open output/dashboard.html   # or just double-click it
 No `pip install` is required to run the tool itself — the correlation engine
 and dashboard renderer are pure standard library. `pytest` is only needed to
 run the test suite.
+
+<p align="center">
+  <img src="assets/terminal-demo.svg" width="700" alt="Terminal session: one command ingests 34 events, finds 5 incidents (2 critical, 1 high, 2 medium), and writes the dashboard HTML">
+</p>
 
 ### Run against your own logs
 
