@@ -3,7 +3,7 @@
 A small, dependency-free log correlation engine that turns raw SSH/sudo auth
 logs and firewall flow logs into MITRE ATT&CK-mapped incidents, and renders
 them as a self-contained HTML dashboard. No database, no external services,
-no build step — clone it, point it at logs, open the HTML file it produces.
+no build step: clone it, point it at logs, open the HTML file it produces.
 
 **[View the live sample dashboard →](https://builtbysai.github.io/log-correlator-siem/)**
 (rendered from the bundled synthetic dataset in `data/sample_logs/`)
@@ -20,9 +20,9 @@ no build step — clone it, point it at logs, open the HTML file it produces.
 
 Most public "SIEM" demos are either a 40-container ELK/Wazuh stack, or a
 single regex that flags one log line at a time. This sits in between: it
-correlates *sequences* of events across sources — a burst of failed SSH
+correlates *sequences* of events across sources: a burst of failed SSH
 logins immediately followed by a successful one from the same IP is a
-different, more urgent finding than either event alone — and maps each
+different, more urgent finding than either event alone, and it maps each
 finding to the specific ATT&CK technique it demonstrates, the way an actual
 detection engineering rule set does.
 
@@ -37,7 +37,70 @@ detection engineering rule set does.
 | R005 | T1041 | Exfiltration Over C2 Channel (large outbound transfer) |
 
 Each rule lives in its own function in `src/log_correlator/rules.py` with
-its own unit tests — see [Design notes](#design-notes) for why.
+its own unit tests (see [Design notes](#design-notes) for why).
+
+## What it catches: a worked example
+
+The bundled sample data (`data/sample_logs/`, 34 events) plays out a full
+intrusion. One command:
+
+```bash
+python3 main.py --auth data/sample_logs/auth.log --firewall data/sample_logs/firewall.csv --out output/dashboard.html
+```
+
+```
+Ingested 34 events -> 5 incidents
+  critical 2
+  high     1
+  medium   2
+```
+
+What those five incidents describe, in order:
+
+**03:14, brute force (R001, high).** Seven failed SSH logins in under a
+minute from `203.0.113.45`, cycling through `admin`, `root`, and `test`:
+
+```
+2026-08-30T03:14:02+00:00 web01 sshd[1204]: Failed password for invalid user admin from 203.0.113.45 port 51422 ssh2
+2026-08-30T03:14:07+00:00 web01 sshd[1205]: Failed password for root from 203.0.113.45 port 51430 ssh2
+...
+```
+
+**03:14:52, the guessing worked (R002, critical).** Fifty seconds after the
+burst, the same IP logs in as `root` successfully. R002 only fires because
+R001 already flagged the IP: the engine chains detections instead of judging
+each log line on its own.
+
+```
+2026-08-30T03:14:52+00:00 web01 sshd[1211]: Accepted password for root from 203.0.113.45 port 51478 ssh2
+```
+
+Recommended action: force a password reset, invalidate sessions, review what
+that login did next.
+
+**03:16, recon (R004, medium).** The same IP probes 10 distinct ports on
+`10.0.0.5` within 60 seconds (21, 22, 23, 25, 80, 443, 445, 3306, 3389,
+8080). Classic scan shape.
+
+**03:25, possible persistence (R003, medium).** User `hans` fails sudo auth
+twice, then successfully runs `useradd -m svc-backup`. A new account created
+right after failed privilege escalation is worth a look:
+
+```
+2026-08-30T03:25:31+00:00 web01 sudo: hans : TTY=pts/0 ; PWD=/home/hans ; USER=root ; COMMAND=/usr/sbin/useradd -m svc-backup
+```
+
+**23:47, exfiltration (R005, critical).** 75,000,000 bytes from internal host
+`10.0.0.14` to `198.51.100.200` at 11:47 PM. Severity escalates to critical
+because the transfer happens outside business hours:
+
+```
+2026-08-30T23:47:12+00:00,10.0.0.14,198.51.100.200,443,tcp,ALLOW,75000000
+```
+
+Five rules, one coherent story: brute force, foothold, recon, persistence,
+exfiltration. That is what correlation buys over line-by-line alerting. Each
+event is unremarkable alone; together they describe an intrusion.
 
 ## Quick start
 
@@ -48,7 +111,7 @@ python3 main.py --auth data/sample_logs/auth.log --firewall data/sample_logs/fir
 open output/dashboard.html   # or just double-click it
 ```
 
-No `pip install` is required to run the tool itself — the correlation engine
+No `pip install` is required to run the tool itself: the correlation engine
 and dashboard renderer are pure standard library. `pytest` is only needed to
 run the test suite.
 
@@ -58,12 +121,12 @@ run the test suite.
 
 ### Run against your own logs
 
-* **Auth log** — one event per line, rsyslog/sshd/sudo style with an ISO 8601
+* **Auth log**: one event per line, rsyslog/sshd/sudo style with an ISO 8601
   timestamp: `2026-08-30T03:14:02+00:00 web01 sshd[1204]: Failed password for invalid user admin from 203.0.113.45 port 51422 ssh2`
-* **Firewall log** — CSV with header `timestamp,src_ip,dst_ip,dst_port,protocol,action,bytes`
+* **Firewall log**: CSV with header `timestamp,src_ip,dst_ip,dst_port,protocol,action,bytes`
 
-Malformed lines are skipped (with a count printed to stderr), not fatal —
-point it at real logs without pre-cleaning them first.
+Malformed lines are skipped (with a count printed to stderr), not fatal.
+Point it at real logs without pre-cleaning them first.
 
 ```bash
 python3 main.py --auth /var/log/auth.log --firewall /path/to/flows.csv \
@@ -77,9 +140,9 @@ pip install -r requirements.txt
 pytest -v
 ```
 
-35 tests cover the parsers, every rule in isolation (including negative
-cases — a burst that stays *under* threshold, an unrelated success that
-should *not* get linked to a brute-force incident, etc.), and an end-to-end
+25 tests cover the parsers, every rule in isolation (including negative
+cases: a burst that stays *under* threshold, an unrelated success that
+should *not* get linked to a brute-force incident), and an end-to-end
 run against the bundled sample data.
 
 ## Design notes
@@ -90,17 +153,17 @@ run against the bundled sample data.
   testable and easy to tune (thresholds are keyword arguments) without
   touching the others.
 - **Correlation, not just matching.** R002 (Valid Accounts) only fires by
-  referencing the *output* of R001 (Brute Force) — it looks for a successful
+  referencing the *output* of R001 (Brute Force): it looks for a successful
   login from an IP that already has an open brute-force incident. This
   two-stage pattern (raw detections → incidents that reference other
   incidents) is closer to how real correlation/SOAR rules chain together
   than a flat list of independent regexes.
 - **No framework, no external dependency, at runtime.** The dashboard is
   rendered as one HTML string with inlined CSS and a handful of lines of
-  vanilla JS for the expand/collapse cards — it opens the same way in a
+  vanilla JS for the expand/collapse cards. It opens the same way in a
   browser five years from now as it does today.
 - **Fails soft on bad input.** A log line that doesn't match any known
-  pattern is skipped and counted, not raised — real logs are messy, and a
+  pattern is skipped and counted, not raised. Real logs are messy, and a
   tool that throws on the first unexpected line is not usable against them.
 
 ## Roadmap
@@ -114,11 +177,11 @@ run against the bundled sample data.
 
 ## About
 
-Built by [Hans Sai](https://builtbysai.com) — IT Support Associate II at
+Built by [Hans Sai](https://builtbysai.com): IT Support Associate II at
 Amazon, U.S. Air Force Reservist (Cyber Systems), Cybersecurity B.S. candidate
 at Liberty University (May 2026), Security+ certified with an active DoD
 Secret clearance.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
